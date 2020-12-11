@@ -9,7 +9,7 @@ Description: >
 Globals:
   Function:
     Tracing: Active
-    Timeout: 3
+    Timeout: 10
     Environment:
       Variables:
         POWERTOOLS_SERVICE_NAME: issue238
