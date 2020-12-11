@@ -25,12 +25,12 @@ s3_key = "airtravel.csv"
 #         return ret
 #     return decorated
 
-# # @tracer.capture_method
+# @tracer.capture_method
 # @dummy_decorator
 def load_file_from_s3(bucket_name, key):
     try:
-        with tracer.provider.in_subsegment("## load_file_from_s3") as subsegment:
-            obj = s3_client.get_object(Bucket=bucket_name, Key=key)
+        # with tracer.provider.in_subsegment("## load_file_from_s3") as subsegment:
+        obj = s3_client.get_object(Bucket=bucket_name, Key=key)
     except botocore.exceptions.ClientError as exc:
         if exc.response["Error"]["Code"] != "404":
             raise exc
@@ -47,7 +47,8 @@ def lambda_handler(event, context):
         "s3_response": file_obj
     })
 
-    data = file_obj["Body"].read().decode('utf-8')
+    data = file_obj["Body"].read(file_obj["Content-Length"]).decode('utf-8')
+    # data = file_obj["Body"].read().decode('utf-8')
 
     return {
         "statusCode": 200,
